@@ -1,0 +1,10 @@
+# Bundle patch for the fast pills.
+#
+# Installing this package as a profile bundle (`dsh plugin add`, or the Plugins
+# page) activates the row below at the bundle layer. The row carries no config:
+# the capsule tree lives in this plugin's own data file, and the few host-half
+# settings the plugin will grow (palette overrides, the custom system prompt,
+# the DeepSeek provider and model) are added here when they exist.
+- insert:
+    - id: dsh-fast-pills
+      name: dsh-fast-pills

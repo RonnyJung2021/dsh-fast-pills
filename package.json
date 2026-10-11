@@ -1,0 +1,63 @@
+{
+  "name": "dsh-fast-pills",
+  "displayName": "DSH fast pills",
+  "description": "Capsule row above the DSH Web GUI composer: one press splices a stored capsule into the draft, and the capsule tree plus its usage ledger live in local files",
+  "version": "0.1.0",
+  "private": true,
+  "license": "FSL-1.1-ALv2",
+  "type": "module",
+  "engines": {
+    "node": ">=22.19"
+  },
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "assets",
+    "scripts",
+    "cordis.patch.yml",
+    "build.mjs",
+    "package.json",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "typecheck": "tsc -p tsconfig.json",
+    "pretest": "node build.mjs",
+    "test": "node --test test/*.test.mjs",
+    "prepack": "node build.mjs",
+    "install-profile": "node scripts/install-profile.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-session"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.3.0",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.9.3"
+  }
+}

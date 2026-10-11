@@ -1,0 +1,28 @@
+{
+  // Type check only: esbuild (build.mjs) writes lib/. One project covers both
+  // halves — the host half runs in Node, the browser half runs in the page, and
+  // keeping them in one strict project is what makes `npm run typecheck` a
+  // single command. Nothing here is emitted, so the two libs coexist.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": ["node", "react"],
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    // `noEmit` is what makes the explicit `.ts` / `.tsx` import specifiers
+    // legal; esbuild reads them straight, and Node's own type stripping would too.
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

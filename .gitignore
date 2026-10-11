@@ -1,0 +1,26 @@
+# Build-time dependencies and the workspace-local npm cache.
+node_modules/
+.npm-cache/
+
+# Build output: `npm run build` writes it, and `prepack` writes it before a
+# package is packed, so the repository only carries sources.
+lib/
+
+# Editor and OS residue.
+.vscode/
+.DS_Store
+
+# Local run scaffolding: the link to an isolated DSH home, and that home
+# itself. It carries credentials, sessions, logs and storages, so it never
+# goes into the repository.
+.dsh
+homes/
+
+# Working notes and scaffolding that were never part of the released plugin:
+# the build write-ups, the dated step folders, the acceptance plans and the
+# screenshots taken along the way. Only the two user-facing notes in `docs/`
+# are part of the repository; everything else there stays local.
+PROGRESS.md
+docs/*
+!docs/colors.md
+!docs/storage.md
