@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2026-10-11
+
+The images in both READMEs are fetched by absolute URL, so they render on the
+npm package page as well as on GitHub. Nothing else changed.
+
 ## [0.1.0] - 2026-10-11
 
 A capsule row above the composer, a drawer of ledgers and trends, and a DeepSeek-backed

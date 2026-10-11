@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/banner.png" alt="dsh-fast-pills — the capsule row above the composer" width="100%">
+<img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/banner.png" alt="dsh-fast-pills — the capsule row above the composer" width="100%">
 
 # dsh-fast-pills
 
@@ -12,7 +12,7 @@ English / [中文](README.md)
 
 <p>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-FSL--1.1--ALv2-blue" alt="license"></a>
-  <img src="https://img.shields.io/badge/version-0.1.0-blue" alt="version">
+  <img src="https://img.shields.io/badge/version-0.1.1-blue" alt="version">
   <img src="https://img.shields.io/badge/DSH-Web%20%3E%3D0.1.5--rc.2-8b5cf6" alt="DSH">
   <img src="https://img.shields.io/badge/tests-158%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/node-%3E%3D22.19-339933" alt="node">
@@ -34,38 +34,38 @@ In DSH Web you keep typing the same lines: "continue", "write this change up as 
 ## Demo
 
 <p align="center">
-  <img src="assets/row.png" alt="The capsule row above the composer" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/row.png" alt="The capsule row above the composer" width="100%">
 </p>
 
 **One row, right above the composer**: the round board at its head is today's press count (cut at local midnight), the solid amber one is a quick capsule, the dashed one is a group.
 
 <p align="center">
-  <img src="assets/ledger.png" alt="Today's capsule ledger" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/ledger.png" alt="Today's capsule ledger" width="100%">
 </p>
 
 **Today's capsule ledger**: a strip of figures, a 00:00–24:00 line and a list of presses in time order. Hover a mark or a row and the two highlight each other.
 
 <p align="center">
-  <img src="assets/trend.png" alt="Capsule usage trends" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/trend.png" alt="Capsule usage trends" width="100%">
 </p>
 
 **Capsule usage trends**: a small table picks the range and the capsule, with day / week / month, a range overview, daily bars, a calendar heat grid and a daily breakdown.
 
 <p align="center">
-  <img src="assets/tree.png" alt="The capsule tree editor" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/tree.png" alt="The capsule tree editor" width="100%">
 </p>
 
 **The capsule tree editor**: add, rename in place, drag to reorder, drag in and out of groups — one row says where a capsule shows up and what a press writes.
 
 <p align="center">
-  <img src="assets/form.png" alt="The new-capsule form" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/form.png" alt="The new-capsule form" width="100%">
 </p>
 
 **A new capsule**: the name is the button's label, "what it writes" is the text a press splices in (typing `/` picks a skill), and the chips at the bottom pick the workspaces it is limited to.
 
 <p align="center">
-  <img src="assets/ai-preview.png" alt="What a Super Pillls send would carry" width="50%">
-  <img src="assets/ai-result.png" alt="Super Pillls suggestions" width="50%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/ai-preview.png" alt="What a Super Pillls send would carry" width="50%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/ai-result.png" alt="Super Pillls suggestions" width="50%">
 </p>
 
 **⚡Super Pillls**: on the left, the whole request shown before it is sent (system prompt / your preference / the session records / the current capsules, already masked once); on the right, the model's suggestions, each one a form that joins the tree only when you press "create".

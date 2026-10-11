@@ -2,7 +2,7 @@
   "name": "dsh-fast-pills",
   "displayName": "DSH fast pills",
   "description": "Capsule row above the DSH Web GUI composer: one press splices a stored capsule into the draft, and the capsule tree plus its usage ledger live in local files",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "FSL-1.1-ALv2",
   "author": "RonnyJung2021 <263851522+RonnyJung2021@users.noreply.github.com>",
   "keywords": [

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/banner.png" alt="dsh-fast-pills —— 输入框上方的胶囊行" width="100%">
+<img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/banner.png" alt="dsh-fast-pills —— 输入框上方的胶囊行" width="100%">
 
 # dsh-fast-pills
 
@@ -12,7 +12,7 @@
 
 <p>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-FSL--1.1--ALv2-blue" alt="license"></a>
-  <img src="https://img.shields.io/badge/version-0.1.0-blue" alt="version">
+  <img src="https://img.shields.io/badge/version-0.1.1-blue" alt="version">
   <img src="https://img.shields.io/badge/DSH-Web%20%3E%3D0.1.5--rc.2-8b5cf6" alt="DSH">
   <img src="https://img.shields.io/badge/tests-158%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/node-%3E%3D22.19-339933" alt="node">
@@ -34,38 +34,38 @@
 ## 演示
 
 <p align="center">
-  <img src="assets/row.png" alt="输入框上方的胶囊行" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/row.png" alt="输入框上方的胶囊行" width="100%">
 </p>
 
 **一行胶囊就在输入框正上方**：行首圆牌写今天的点击次数（按本机零点切分），实心琥珀那颗是快速胶囊，虚线的是分组。
 
 <p align="center">
-  <img src="assets/ledger.png" alt="今日胶囊台账" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/ledger.png" alt="今日胶囊台账" width="100%">
 </p>
 
 **今日胶囊台账**：指标格 + 00:00–24:00 时间线 + 按时间排好的记录列表；鼠标移到色块或某一行，两边互相高亮。
 
 <p align="center">
-  <img src="assets/trend.png" alt="胶囊使用趋势统计" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/trend.png" alt="胶囊使用趋势统计" width="100%">
 </p>
 
 **胶囊使用趋势统计**：一张小表选区间与胶囊，配「天 / 周 / 月」与区间概览、每日柱状图、日历热力格、每日明细。
 
 <p align="center">
-  <img src="assets/tree.png" alt="胶囊树编辑器" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/tree.png" alt="胶囊树编辑器" width="100%">
 </p>
 
 **胶囊树编辑器**：新增、就地改名、拖动排序、拖进拖出分组，一行写完这颗胶囊会在哪儿出现、点一下插什么。
 
 <p align="center">
-  <img src="assets/form.png" alt="新建胶囊表单" width="100%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/form.png" alt="新建胶囊表单" width="100%">
 </p>
 
 **新建一颗胶囊**：名字是按钮上的字，「写入什么」是点一下插进草稿的正文（打一个 `/` 就能挑 Skill），底下选限定工作区。
 
 <p align="center">
-  <img src="assets/ai-preview.png" alt="Super Pillls 发送前预览" width="50%">
-  <img src="assets/ai-result.png" alt="Super Pillls 识别结果" width="50%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/ai-preview.png" alt="Super Pillls 发送前预览" width="50%">
+  <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/ai-result.png" alt="Super Pillls 识别结果" width="50%">
 </p>
 
 **⚡Super Pillls**：左边是发送前给你过目的全文（系统提示词 / 你的偏好 / 会话记录 / 现有胶囊，已遮一遍）；右边是模型给的建议，每条都是一张表单，按「新建」才入树。
