@@ -2,9 +2,10 @@
 node_modules/
 .npm-cache/
 
-# Build output: `npm run build` writes it, and `prepack` writes it before a
-# package is packed, so the repository only carries sources.
-lib/
+# `lib/` is deliberately NOT ignored: it is the payload, and a git install
+# cannot build it (pnpm refuses a git dependency's build scripts unless the
+# machine allowlists the package). Publishing rebuilds it through `prepack`, so
+# the committed `lib/` is kept in step by `npm run build` before every commit.
 
 # Editor and OS residue.
 .vscode/

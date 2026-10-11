@@ -134,20 +134,35 @@
 ### 方式一：命令
 
 ```bash
-git clone <repo-url> dsh-fast-pills && cd dsh-fast-pills
-npm install && npm run build
-node scripts/install-profile.mjs --home "${DSH_HOME:-$HOME/.dsh}"
+# 从 npm 装
+dsh plugin --profile web add dsh-fast-pills
+
+# 或直接从 GitHub 装：仓库里带着构建好的 lib/，装的人不需要本机再构建
+dsh plugin --profile web add https://github.com/RonnyJung2021/dsh-fast-pills
 ```
+
+> **GitHub 直装靠的是仓库里那份 `lib/`，别改成「装完再构建」。** pnpm 默认拒绝执行 git 依赖的
+> 构建脚本（`ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED`），除非本机在 profile 的
+> `pnpm-workspace.yaml` 里把包加进 `onlyBuiltDependencies`。所以构建产物入库、构建挂在 `prepack`
+> 上，git 安装既不用构建也不用放行。
 
 装完**重启一次 `dsh web`**：宿主半是引擎启动时加载的，只刷新页面看不到新的路由。
 
 ### 方式二：插件页
 
-侧栏 **插件** → **添加 bundle** → 填这个 checkout 的路径 → 装上并启用。等价于：
+侧栏 **插件** → **添加 bundle** → 填 `dsh-fast-pills`（或上面那个 GitHub 地址）→ 装上并启用。
+
+### 方式三：本机开发时从工作目录装
 
 ```bash
-dsh plugin --profile web add link:/path/to/dsh-fast-pills
+node scripts/install-profile.mjs --home /path/to/home              # 装
+node scripts/install-profile.mjs --home /path/to/home --dry-run    # 只打印将改动什么
+node scripts/install-profile.mjs --home /path/to/home --uninstall  # 卸
 ```
+
+它写 profile `package.json` 里的 `link:` 依赖与包名、`node_modules/<包名>` 软链，每个被改的文件
+先备份成 `*.bak-dsh-fast-pills`，并打印它动了哪些路径。三条路都要求那个 home 的 `web` profile
+已经存在（先跑一次 `dsh web` 就会生成）。
 
 > 想先拿一份干净的家目录试装（不动日常那个 `~/.dsh`）：
 
@@ -156,8 +171,6 @@ DSH_HOME=/tmp/dsh-clean-home dsh web --no-open --port 0    # 先起一次，生�
 node scripts/install-profile.mjs --home /tmp/dsh-clean-home
 DSH_HOME=/tmp/dsh-clean-home dsh web --no-open --port 0    # 终端打印带 ?token= 的地址
 ```
-
-> 两条路都要求那个 home 的 `web` profile 已经存在；`install-profile.mjs` 每改一个文件都会先备份成 `*.bak-dsh-fast-pills`，并打印它动了哪些路径。
 
 ### 首次使用
 
@@ -170,6 +183,8 @@ DSH_HOME=/tmp/dsh-clean-home dsh web --no-open --port 0    # 终端打印带 ?to
 ### 卸载
 
 ```bash
+dsh plugin --profile web remove dsh-fast-pills
+# 或者从工作目录装的那份：
 node scripts/install-profile.mjs --home "${DSH_HOME:-$HOME/.dsh}" --uninstall
 ```
 
@@ -231,7 +246,7 @@ dsh-fast-pills/
 │   └── client/             # 浏览器半：胶囊行、抽屉、插件卡片
 │       ├── components/     #   pillRow、drawer、panel、ledgerPanel、trendPanel、pillsEditor、recognizePanel、card…
 │       └── constants/      #   styles.ts：插件自带的那一张样式表
-├── lib/{index.js,client.js} # 两个半边构建产物（仓库里带着，装上即可用）
+├── lib/{index.js,client.js} # 两个半边构建产物（仓库里带着，装上即可用；index.js.map 随宿主半）
 ├── assets/                  # README 与插件卡片的配图
 ├── docs/                    # colors.md 配色变量表、storage.md 存储与路由
 ├── scripts/install-profile.mjs  # 装进 / 移出某个 profile

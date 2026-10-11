@@ -3,8 +3,16 @@
   "displayName": "DSH fast pills",
   "description": "Capsule row above the DSH Web GUI composer: one press splices a stored capsule into the draft, and the capsule tree plus its usage ledger live in local files",
   "version": "0.1.0",
-  "private": true,
   "license": "FSL-1.1-ALv2",
+  "author": "RonnyJung2021 <263851522+RonnyJung2021@users.noreply.github.com>",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "bundle",
+    "capsule",
+    "composer"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22.19"
@@ -38,6 +46,7 @@
     "pretest": "node build.mjs",
     "test": "node --test test/*.test.mjs",
     "prepack": "node build.mjs",
+    "prepublishOnly": "npm run typecheck && npm test",
     "install-profile": "node scripts/install-profile.mjs"
   },
   "dsh": {
@@ -59,5 +68,13 @@
     "@types/react-dom": "^19.3.0",
     "esbuild": "^0.24.2",
     "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RonnyJung2021/dsh-fast-pills.git"
+  },
+  "homepage": "https://github.com/RonnyJung2021/dsh-fast-pills",
+  "bugs": {
+    "url": "https://github.com/RonnyJung2021/dsh-fast-pills/issues"
   }
 }

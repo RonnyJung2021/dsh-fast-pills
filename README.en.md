@@ -134,20 +134,30 @@ The card under **Plugins → dsh-fast-pills** carries one switch: off means the 
 ### Option 1: the command line
 
 ```bash
-git clone <repo-url> dsh-fast-pills && cd dsh-fast-pills
-npm install && npm run build
-node scripts/install-profile.mjs --home "${DSH_HOME:-$HOME/.dsh}"
+# from npm
+dsh plugin --profile web add dsh-fast-pills
+
+# or straight from GitHub: the repo carries the built lib/, so nothing is built locally
+dsh plugin --profile web add https://github.com/RonnyJung2021/dsh-fast-pills
 ```
+
+> **A GitHub install works off the `lib/` committed here; do not turn it into "install, then build".** pnpm refuses to run a git dependency's build scripts unless the machine allowlists the package in the profile's `pnpm-workspace.yaml` (`ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED`). So the build output is committed and the build is hung off `prepack`: a git install needs neither a build nor an allowlist entry.
 
 Then **restart `dsh web`**: the host half is loaded when the engine starts, so a page refresh alone will not show the new routes.
 
 ### Option 2: the Plugins page
 
-Sidebar → **Plugins** → **Add bundle** → the path of this checkout → install and enable. The same thing on the command line:
+Sidebar → **Plugins** → **Add bundle** → `dsh-fast-pills` (or the GitHub URL above) → install and enable.
+
+### Option 3: from a working directory while developing
 
 ```bash
-dsh plugin --profile web add link:/path/to/dsh-fast-pills
+node scripts/install-profile.mjs --home /path/to/home              # install
+node scripts/install-profile.mjs --home /path/to/home --dry-run    # print what it would touch
+node scripts/install-profile.mjs --home /path/to/home --uninstall  # remove
 ```
+
+It writes the `link:` dependency and the package name into the profile `package.json` and the `node_modules/<name>` symlink, backs every file it edits up as `*.bak-dsh-fast-pills`, and prints the paths it touched. All three routes need the `web` profile of that home to exist already (one `dsh web` run creates it).
 
 > To try it in a throwaway home first (leaving your everyday `~/.dsh` alone):
 
@@ -156,8 +166,6 @@ DSH_HOME=/tmp/dsh-clean-home dsh web --no-open --port 0    # once, to create the
 node scripts/install-profile.mjs --home /tmp/dsh-clean-home
 DSH_HOME=/tmp/dsh-clean-home dsh web --no-open --port 0    # the terminal prints a ?token= URL
 ```
-
-> Both ways need the `web` profile of that home to exist already; `install-profile.mjs` backs every file it edits up as `*.bak-dsh-fast-pills` and prints the paths it touched.
 
 ### First run
 
@@ -170,6 +178,8 @@ To write your own: drawer → Settings → Capsules → New capsule. The **name*
 ### Uninstall
 
 ```bash
+dsh plugin --profile web remove dsh-fast-pills
+# or, for a copy installed from a working directory:
 node scripts/install-profile.mjs --home "${DSH_HOME:-$HOME/.dsh}" --uninstall
 ```
 
@@ -231,7 +241,7 @@ dsh-fast-pills/
 │   └── client/             # Browser half: the row, the drawer, the plugin card
 │       ├── components/     #   pillRow, drawer, panel, ledgerPanel, trendPanel, pillsEditor, recognizePanel, card…
 │       └── constants/      #   styles.ts, the plugin's one stylesheet
-├── lib/{index.js,client.js} # built halves (shipped in the repo, so installing needs no build)
+├── lib/{index.js,client.js} # built halves (shipped in the repo, so installing needs no build; index.js.map ships with the host half)
 ├── assets/                  # pictures for this README and the plugin card
 ├── docs/                    # colors.md (the colour variables) and storage.md (storage and routes)
 ├── scripts/install-profile.mjs  # install into / remove from one profile
