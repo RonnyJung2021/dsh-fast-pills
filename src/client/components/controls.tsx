@@ -280,10 +280,12 @@ export interface DialogProps {
   readonly onClose: () => void
   /** What is being asked. */
   readonly title: string
-  /** The consequences, in one sentence. */
-  readonly description: string
-  /** The answer buttons, in reading order. */
-  readonly footer: ReactNode
+  /** The consequences, in one sentence; left out when the body says them instead. */
+  readonly description?: string
+  /** A body of its own, for a dialog that holds a form rather than a question. */
+  readonly children?: ReactNode
+  /** The answer buttons, in reading order; left out when the body carries its own. */
+  readonly footer?: ReactNode
 }
 
 /**
@@ -291,11 +293,13 @@ export interface DialogProps {
  *
  * It is drawn inside the panel rather than beside it, so it inherits the paper
  * the panel is on; `useModalLayer` is what keeps Escape and Tab meaningful while
- * it is up, exactly as the drawer itself uses it.
+ * it is up, exactly as the drawer itself uses it. A dialog whose body is a form
+ * passes that form as the children and no footer: the form asks its own
+ * questions and carries its own buttons.
  * @param props - what is asked, and what the answers do.
  * @returns the dialog, or nothing while it is closed.
  */
-export function Dialog({ open, onClose, title, description, footer }: DialogProps): JSX.Element | null {
+export function Dialog({ open, onClose, title, description, children, footer }: DialogProps): JSX.Element | null {
   const dialog: RefObject<HTMLDivElement | null> = useRef(null)
   const theme = useContext(ThemeContext)
   useModalLayer(dialog, open, onClose)
@@ -315,8 +319,9 @@ export function Dialog({ open, onClose, title, description, footer }: DialogProp
           <h2 className="dfp-dialog-title">{title}</h2>
           <button type="button" className="dfp-dialog-close" aria-label="关闭" onClick={onClose}>×</button>
         </div>
-        <p className="dfp-dialog-note">{description}</p>
-        <div className="dfp-dialog-actions">{footer}</div>
+        {description !== undefined && <p className="dfp-dialog-note">{description}</p>}
+        {children}
+        {footer !== undefined && <div className="dfp-dialog-actions">{footer}</div>}
       </div>
     </div>,
     document.body,

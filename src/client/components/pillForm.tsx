@@ -17,6 +17,7 @@ import { useMemo, useRef, useState, type JSX, type KeyboardEvent } from 'react'
 import type { Pill } from '../../shared/types/index.ts'
 import { Action, Check, Tag } from './controls.tsx'
 import type { Text } from '../../shared/types/index.ts'
+import { newId } from '../../shared/utils/pillTree.ts'
 import { useSkills, type SkillName } from '../services/skillCatalog.ts'
 import { useText } from '../contexts/textContext.ts'
 
@@ -303,6 +304,57 @@ export function PillForm({
         <span className="dfp-field-note">{t('form.saveNote')}</span>
       </div>
     </div>
+  )
+}
+
+/** Everything the new-capsule form receives. */
+export interface NewPillFormProps {
+  /** The workspaces this project knows, offered as the scope entries. */
+  readonly workspaces: readonly WorkspaceChoice[]
+  /** The session whose skill catalog the body box suggests from. */
+  readonly sessionId: string
+  /** Called with the finished capsule; the caller decides where it is stored. */
+  readonly onAdd: (pill: Pill) => void
+  /** Called when the form should close without adding anything. */
+  readonly onCancel: () => void
+  /** Whether the scope row is offered (see {@link PillForm}). */
+  readonly showScope?: boolean
+  /**
+   * What the form starts from, over the empty draft.
+   *
+   * It is read once, when the form mounts; a quick add carries the composer's
+   * own words and the workspace the session sits in in through here.
+   */
+  readonly initial?: Partial<PillDraft>
+}
+
+/**
+ * The new-capsule form: an empty draft, and the capsule it becomes.
+ *
+ * It is the same form an edit uses, with the one difference a new capsule has —
+ * nobody hands it a draft, so it keeps its own. Every entry that creates a
+ * capsule (the settings tree, a fold, the row's quick-add button) goes through
+ * here, so a capsule is written the same way wherever it is made; where it
+ * lands is the caller's business.
+ * @param props - the workspaces, the session, and what to do with the capsule.
+ * @returns the form.
+ */
+export function NewPillForm({
+  workspaces, sessionId, onAdd, onCancel, showScope = true, initial,
+}: NewPillFormProps): JSX.Element {
+  const t = useText()
+  const [draft, setDraft] = useState<PillDraft>(() => ({ ...EMPTY_DRAFT, ...initial }))
+  return (
+    <PillForm
+      draft={draft}
+      editing={false}
+      workspaces={workspaces}
+      sessionId={sessionId}
+      onDraft={setDraft}
+      onSave={() => { onAdd(pillOf(draft, newId('pill'), t)) }}
+      onCancel={onCancel}
+      showScope={showScope}
+    />
   )
 }
 

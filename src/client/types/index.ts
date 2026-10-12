@@ -37,6 +37,12 @@ export interface InputActions {
   submit(): void
 }
 
+/** The composer's own state, as far as the row reads it. */
+export interface ComposerInputState {
+  /** The text the composer is holding now, before it is sent. */
+  readonly draft: string
+}
+
 /** One workspace row, as far as the row reads it. */
 export interface WorkspaceView {
   /** Canonical absolute directory of the workspace. */

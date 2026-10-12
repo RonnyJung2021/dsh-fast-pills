@@ -12,9 +12,9 @@ English / [中文](README.md)
 
 <p>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-FSL--1.1--ALv2-blue" alt="license"></a>
-  <img src="https://img.shields.io/badge/version-0.1.1-blue" alt="version">
+  <img src="https://img.shields.io/badge/version-0.2.0-blue" alt="version">
   <img src="https://img.shields.io/badge/DSH-Web%20%3E%3D0.1.5--rc.2-8b5cf6" alt="DSH">
-  <img src="https://img.shields.io/badge/tests-158%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-161%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/node-%3E%3D22.19-339933" alt="node">
   <img src="https://img.shields.io/badge/dependencies-0%20runtime-orange" alt="dependencies">
 </p>
@@ -37,7 +37,7 @@ In DSH Web you keep typing the same lines: "continue", "write this change up as 
   <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/row.png" alt="The capsule row above the composer" width="100%">
 </p>
 
-**One row, right above the composer**: the round board at its head is today's press count (cut at local midnight), the solid amber one is a quick capsule, the dashed one is a group.
+**One row, right above the composer**: the round board at its head is today's press count (cut at local midnight), the hollow ⚡ beside it is quick add, the solid amber one is a quick capsule, and the dashed one is a group. A group's fold grows above the group itself, to the left and right together, and only wraps once the row is full; pressing anywhere else — or any capsule inside it — puts it away.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/ledger.png" alt="Today's capsule ledger" width="100%">
@@ -84,9 +84,13 @@ A capsule marked "quick" submits the **whole draft** about a second after the pr
 
 ### Groups and workspace limits
 
-A first-level entry is either a pressable capsule or a foldable group. A group holds capsules only and nests two levels at most. **Pressing a group only opens or closes it** and writes nothing; the open state is not stored, so a reload comes back fully folded.
+A first-level entry is either a pressable capsule or a foldable group. A group holds capsules only and nests two levels at most. **Pressing a group only opens or closes it** and writes nothing; the open state is not stored, so a reload comes back fully folded. The open fold sits directly above its own group — the two share one midline — and grows to the left and right together, wrapping only once the row is full. It is a "pick one" moment: pressing anywhere else, the group again, or any capsule inside it (after the text has landed) puts it away.
 
 Capsules and groups can both be **limited to workspaces**: the capsule then shows only in the chosen workspaces (and their subdirectories), and choosing none means everywhere. The choices are the workspaces the page already knows — one chip each, no typing a path. A group's limit and a capsule's own limit are unioned: either one matching shows the capsule.
+
+### Quick add: keeping the line you just wrote
+
+The hollow **⚡** beside the round board saves a capsule. Its press opens the new-capsule form — the same one the settings page uses — with two things already carried in: the line the composer is holding goes into "what it writes" (a leading `/` is still split off as a skill), and the current workspace is already picked in the workspace list. Name it, press "create", and the capsule lands **first** in the row, inside no fold. Hovering the ⚡ shows a black tooltip reading 快捷新增胶囊.
 
 ### Today's capsule ledger
 
@@ -172,6 +176,7 @@ DSH_HOME=/tmp/dsh-clean-home dsh web --no-open --port 0    # the terminal prints
 1. Open any conversation: the seeded row should be above the composer — a quick "continue" capsule and a "common" group (holding "explain" and "summarise the above").
 2. Press "continue": the text lands in the draft and is sent about a second later.
 3. Press the round board at the head of the row. The drawer opens on the right, starting on today's ledger, with that press already listed.
+4. To keep a line you have just written: type it in the composer and press the ⚡ beside the board — the form opens with that text and the current workspace already in it. Name it, press "create", and the capsule lands first in the row.
 
 To write your own: drawer → Settings → Capsules → New capsule. The **name** is the button's label and **what it writes** is the text a press splices in. Typing a `/` in that field lists the skills this project has installed, and picking one writes `/name` for you.
 
@@ -239,7 +244,7 @@ dsh-fast-pills/
 │   │   ├── services/       #   pillStore / transcriptStore / settingsStore / credentialStore
 │   │   └── llm/            #   deepseekClient and recognition (assemble, mask, preview, send)
 │   └── client/             # Browser half: the row, the drawer, the plugin card
-│       ├── components/     #   pillRow, drawer, panel, ledgerPanel, trendPanel, pillsEditor, recognizePanel, card…
+│       ├── components/     #   pillRow, quickAdd, drawer, panel, ledgerPanel, trendPanel, pillsEditor, recognizePanel, card…
 │       └── constants/      #   styles.ts, the plugin's one stylesheet
 ├── lib/{index.js,client.js} # built halves (shipped in the repo, so installing needs no build; index.js.map ships with the host half)
 ├── assets/                  # pictures for this README and the plugin card
@@ -254,7 +259,7 @@ dsh-fast-pills/
 | Half | What it does | Why it is split this way |
 | --- | --- | --- |
 | Host (`lib/index.js`) | One prefix route `/dsh-fast-pills` over the local data files; the credential and the one model call live here too | The key never leaves the host process, so no route can hand back the plaintext |
-| Browser (`lib/client.js`) | Two entries: the row in `conversation.input.dock` at `order: 15` (the round board, the capsules, the drawer), and a section on the plugin card (the switch and the guide) | The row has to draw against the composer and read the session and its directory |
+| Browser (`lib/client.js`) | Two entries: the row in `conversation.input.dock` at `order: 15` (the round board, the ⚡ quick add, the capsules, the drawer), and a section on the plugin card (the switch and the guide) | The row has to draw against the composer and read the session, its directory and the draft the composer holds |
 
 ### At a glance
 
@@ -262,9 +267,9 @@ This section is for people reading the code or double-checking a claim; skip it 
 
 | Item | Value |
 | --- | --- |
-| Bundle size | `lib/index.js` 121.3 KB / `lib/client.js` 327.7 KB |
+| Bundle size | `lib/index.js` 121.6 KB / `lib/client.js` 336.6 KB |
 | Runtime dependencies | **0** (only the React and slot services the engine already provides) |
-| Tests | 158 cases in 14 files, about 0.5 s |
+| Tests | 161 cases in 14 files, about 0.5 s |
 | Data | local `$DSH_HOME/storages/dsh-fast-pills/`; the page keeps no copy |
 | Compatibility | DSH Web ≥ `0.1.5-rc.2` (accepted on `0.2.0-rc.2`), Node ≥ 22.19 |
 
@@ -323,6 +328,7 @@ Delete `$DSH_HOME/storages/dsh-fast-pills/` for everything, or use "reset capsul
 
 | Status | Item |
 | --- | --- |
+| Released `v0.2.0` | Quick add (the hollow ⚡ beside the board: the form opens on the composer's own line and the current workspace, and the capsule lands first); a group's fold centred on its group, filling the row before it wraps and closing on an outside press or on a capsule inside it |
 | Released `v0.1.0` | File storage and the seed tree; the row (folds / insertion / quick send / workspace limits / drag to reorder); the drawer (today's ledger / trends / settings); four colour families; the tree editor; ⚡Super Pillls (two masking passes, preview before sending, DeepSeek recognition, confirm-to-add) |
 | Planned | Capsule import and export; syncing across machines; verifying more recognition models |
 

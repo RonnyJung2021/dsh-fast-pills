@@ -29,11 +29,11 @@ import type { Pill, PillGroup, PillNode } from '../../shared/types/index.ts'
 import { Action, Dialog, Tag } from './controls.tsx'
 import { useText } from '../contexts/textContext.ts'
 import {
-  EMPTY_DRAFT, PillForm, ScopeChips, draftOf, pillOf, type PillDraft, type WorkspaceChoice,
+  EMPTY_DRAFT, NewPillForm, PillForm, ScopeChips, draftOf, pillOf, type PillDraft, type WorkspaceChoice,
 } from './pillForm.tsx'
 import type { PillStore } from '../services/pillStore.ts'
 import {
-  addGroup, addPill, countEntries, editGroup, moveEntry, movePill, newId, removeGroup, removePill,
+  addGroup, addPill, countEntries, editGroup, moveEntry, movePill, removeGroup, removePill,
   renameNode, updatePill, type GroupRemoval, type PillTarget,
 } from '../../shared/utils/pillTree.ts'
 import { useStore } from '../hooks/useStore.ts'
@@ -160,18 +160,30 @@ export function PillsEditor({ store, workspaces, sessionId }: {
     return renameNode(tree, renaming.id, renaming.text)
   }, [renaming, tree])
 
-  const openPillForm = useCallback((where: Editing, next: PillDraft) => {
+  const openPillForm = useCallback((id: string, next: PillDraft) => {
     setDraft(next)
-    setEditing(where)
+    setEditing({ kind: 'pill', id })
+    setRenaming(undefined)
+  }, [])
+
+  /** Open the new-capsule form on the level the capsule should land in. */
+  const openNewPill = useCallback((target: PillTarget) => {
+    setEditing({ kind: 'new-pill', target })
     setRenaming(undefined)
   }, [])
 
   const savePill = useCallback(() => {
-    if (editing === undefined) return
-    if (editing.kind === 'new-pill') void store.save(addPill(tree, editing.target, pillOf(draft, newId('pill'), t)))
-    else if (editing.kind === 'pill') void store.save(updatePill(tree, pillOf(draft, editing.id, t)))
+    if (editing?.kind !== 'pill') return
+    void store.save(updatePill(tree, pillOf(draft, editing.id, t)))
     setEditing(undefined)
   }, [draft, editing, store, t, tree])
+
+  /** Take the capsule the new-capsule form just wrote into the tree. */
+  const addNewPill = useCallback((pill: Pill) => {
+    if (editing?.kind !== 'new-pill') return
+    void store.save(addPill(tree, editing.target, pill))
+    setEditing(undefined)
+  }, [editing, store, tree])
 
   const toggleGroup = useCallback((groupId: string) => {
     setExpanded((open) => {
@@ -398,7 +410,7 @@ export function PillsEditor({ store, workspaces, sessionId }: {
             // The same press opens the editor and closes it again; the 编辑
             // button beside it stays for anyone who looks for a button.
             if (editing?.kind === 'pill' && editing.id === pill.id) setEditing(undefined)
-            else openPillForm({ kind: 'pill', id: pill.id }, draftOf(pill))
+            else openPillForm(pill.id, draftOf(pill))
           })
         }}
       >
@@ -412,14 +424,14 @@ export function PillsEditor({ store, workspaces, sessionId }: {
             type="button"
             className="dfp-scope-tag"
             title={t('editor.capsuleScopeLabel')}
-            onClick={() => { openPillForm({ kind: 'pill', id: pill.id }, draftOf(pill)) }}
+            onClick={() => { openPillForm(pill.id, draftOf(pill)) }}
           >
             {t('editor.onlyList', { list: pill.scope.join('、') })}
           </button>
         )}
         <span className="dfp-row-quiet">{pill.skill === null ? pill.body : `/${pill.skill} ${pill.body}`}</span>
         <span className="dfp-row-actions">
-          <Action variant="ghost" onClick={() => { openPillForm({ kind: 'pill', id: pill.id }, draftOf(pill)) }}>
+          <Action variant="ghost" onClick={() => { openPillForm(pill.id, draftOf(pill)) }}>
             {t('editor.edit')}
           </Action>
           <Action variant="ghost" onClick={() => { void store.save(removePill(tree, pill.id)) }}>
@@ -487,7 +499,7 @@ export function PillsEditor({ store, workspaces, sessionId }: {
           <span className="dfp-row-actions">
             <Action
               variant="ghost"
-              onClick={() => { openPillForm({ kind: 'new-pill', target: { kind: 'group', groupId: group.id } }, EMPTY_DRAFT) }}
+              onClick={() => { openNewPill({ kind: 'group', groupId: group.id }) }}
             >
               {t('editor.newInside')}
             </Action>
@@ -525,13 +537,10 @@ export function PillsEditor({ store, workspaces, sessionId }: {
         )}
 
         {editing?.kind === 'new-pill' && editing.target.kind === 'group' && editing.target.groupId === group.id && (
-          <PillForm
-            draft={draft}
-            editing={false}
+          <NewPillForm
             workspaces={workspaces}
             sessionId={sessionId}
-            onDraft={setDraft}
-            onSave={savePill}
+            onAdd={addNewPill}
             onCancel={() => { setEditing(undefined) }}
           />
         )}
@@ -580,7 +589,7 @@ export function PillsEditor({ store, workspaces, sessionId }: {
       <div className="dfp-editor-bar">
         <Action
           variant="primary"
-          onClick={() => { openPillForm({ kind: 'new-pill', target: { kind: 'top' } }, EMPTY_DRAFT) }}
+          onClick={() => { openNewPill({ kind: 'top' }) }}
         >
           {t('editor.addCapsule')}
         </Action>
@@ -611,13 +620,10 @@ export function PillsEditor({ store, workspaces, sessionId }: {
       )}
 
       {editing?.kind === 'new-pill' && editing.target.kind === 'top' && (
-        <PillForm
-          draft={draft}
-          editing={false}
+        <NewPillForm
           workspaces={workspaces}
           sessionId={sessionId}
-          onDraft={setDraft}
-          onSave={savePill}
+          onAdd={addNewPill}
           onCancel={() => { setEditing(undefined) }}
         />
       )}

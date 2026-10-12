@@ -12,9 +12,9 @@
 
 <p>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-FSL--1.1--ALv2-blue" alt="license"></a>
-  <img src="https://img.shields.io/badge/version-0.1.1-blue" alt="version">
+  <img src="https://img.shields.io/badge/version-0.2.0-blue" alt="version">
   <img src="https://img.shields.io/badge/DSH-Web%20%3E%3D0.1.5--rc.2-8b5cf6" alt="DSH">
-  <img src="https://img.shields.io/badge/tests-158%20passing-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-161%20passing-brightgreen" alt="tests">
   <img src="https://img.shields.io/badge/node-%3E%3D22.19-339933" alt="node">
   <img src="https://img.shields.io/badge/dependencies-0%20runtime-orange" alt="dependencies">
 </p>
@@ -37,7 +37,7 @@
   <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/row.png" alt="输入框上方的胶囊行" width="100%">
 </p>
 
-**一行胶囊就在输入框正上方**：行首圆牌写今天的点击次数（按本机零点切分），实心琥珀那颗是快速胶囊，虚线的是分组。
+**一行胶囊就在输入框正上方**：行首圆牌写今天的点击次数（按本机零点切分），它旁边那颗空心 ⚡ 是快捷新增，实心琥珀那颗是快速胶囊，虚线的是分组。分组点开的那一层长在它自己正上方、往左右一起长，撑满这一排才换行；点别处（或点组里任一颗）就收起来。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/RonnyJung2021/dsh-fast-pills/main/assets/ledger.png" alt="今日胶囊台账" width="100%">
@@ -84,9 +84,13 @@
 
 ### 分组与限定：一行装不下的时候
 
-一级条目有两种：一颗可点的胶囊，或一颗可展开的组胶囊。组最多两级；**点组胶囊只开合**、不插入任何文字，开合状态不写进文件，刷新回到全折叠。
+一级条目有两种：一颗可点的胶囊，或一颗可展开的组胶囊。组最多两级；**点组胶囊只开合**、不插入任何文字，开合状态不写进文件，刷新回到全折叠。展开的那一层长在分组胶囊**正上方**（两者中线对齐），往左右一起长，撑满这一排的宽度之后才换行；它是一次「挑一颗」的动作，点别处、点分组胶囊自己、或点组里任意一颗（文字插入之后）都会收起来。
 
 胶囊和分组都能**限定工作区**：只在选中的工作区（含子目录）里出现，一条都不选就是处处可见。可选范围就是页面已经认得的那几个工作区，一枚 chip 一个，不用手打路径；分组的限定与胶囊自己的取并集 —— 任一边命中就显示。
+
+### 快捷新增：把刚写下的那句话存成胶囊
+
+行首圆牌旁边那颗**空心 ⚡** 用来存胶囊：按下去弹的就是「新建胶囊」那张表单（和设置页里是同一张），并且已经替你带上两样东西 —— 输入框里正写着的那句话进了「写入什么」（以 `/` 开头仍按 Skill 拆开），当前工作区在「限定工作区」里已经选中。填个名字按「新建」，新胶囊落在这一排**第一位**、不进任何分组。鼠标停在 ⚡ 上会浮出黑底白字的「快捷新增胶囊」。
 
 ### 今日胶囊台账
 
@@ -177,6 +181,7 @@ DSH_HOME=/tmp/dsh-clean-home dsh web --no-open --port 0    # 终端打印带 ?to
 1. 打开任意会话，输入框上方应该出现种子胶囊行：一颗快速的「继续」，一颗组胶囊「常用」（里面是「解释一下」与「总结成要点」）。
 2. 点「继续」：草稿里出现文字，约 1 秒后自动发出去。
 3. 点行首圆牌，抽屉从右侧展开，默认停在「今日胶囊台账」，刚才那一次已经在列表里。
+4. 想存一句刚写下的话：在输入框里打出来，点圆牌旁边那颗 ⚡ —— 表单带着这句话和当前工作区打开，填个名字按「新建」，新胶囊就落在这一排第一位。
 
 要加自己的胶囊：抽屉 →「设置」→「胶囊」→「新增胶囊」。**名字**是按钮上显示的字，**写入什么**是点一下插进草稿的正文；在「写入什么」里打一个 `/` 会列出这个项目已装的 Skill，挑一个就把 `/名字` 写进去。
 
@@ -244,7 +249,7 @@ dsh-fast-pills/
 │   │   ├── services/       #   pillStore / transcriptStore / settingsStore / credentialStore
 │   │   └── llm/            #   deepseekClient 与 recognition（组装、遮罩、预览、发送）
 │   └── client/             # 浏览器半：胶囊行、抽屉、插件卡片
-│       ├── components/     #   pillRow、drawer、panel、ledgerPanel、trendPanel、pillsEditor、recognizePanel、card…
+│       ├── components/     #   pillRow、quickAdd、drawer、panel、ledgerPanel、trendPanel、pillsEditor、recognizePanel、card…
 │       └── constants/      #   styles.ts：插件自带的那一张样式表
 ├── lib/{index.js,client.js} # 两个半边构建产物（仓库里带着，装上即可用；index.js.map 随宿主半）
 ├── assets/                  # README 与插件卡片的配图
@@ -259,7 +264,7 @@ dsh-fast-pills/
 | 半边 | 做什么 | 为什么这么分 |
 | --- | --- | --- |
 | 宿主（`lib/index.js`） | 一条前缀路由 `/dsh-fast-pills`，读写本机那几个数据文件；凭据与那一次模型调用都在这一半 | key 不出宿主进程，页面任何路由都拿不到明文 |
-| 浏览器（`lib/client.js`） | 两处入口：`conversation.input.dock` 里 `order: 15` 的胶囊行（圆牌 + 胶囊 + 抽屉），以及插件卡片上的一节（开关 + 使用说明） | 胶囊行要贴着输入框渲染，还要读会话与工作目录 |
+| 浏览器（`lib/client.js`） | 两处入口：`conversation.input.dock` 里 `order: 15` 的胶囊行（圆牌 + ⚡ 快捷新增 + 胶囊 + 抽屉），以及插件卡片上的一节（开关 + 使用说明） | 胶囊行要贴着输入框渲染，还要读会话、工作目录与输入框里的草稿 |
 
 ### 实际表现
 
@@ -267,9 +272,9 @@ dsh-fast-pills/
 
 | 项 | 值 |
 | --- | --- |
-| 产物体积 | `lib/index.js` 121.3 KB / `lib/client.js` 327.7 KB |
+| 产物体积 | `lib/index.js` 121.6 KB / `lib/client.js` 336.6 KB |
 | 运行时依赖 | **0**（只用引擎自己提供的 React 与插槽服务） |
-| 单测 | 158 项，14 个文件，约 0.5 s 跑完 |
+| 单测 | 161 项，14 个文件，约 0.5 s 跑完 |
 | 数据落点 | 本机 `$DSH_HOME/storages/dsh-fast-pills/`，页面不留副本 |
 | 兼容 | DSH Web ≥ `0.1.5-rc.2`（在 `0.2.0-rc.2` 上验收），Node ≥ 22.19 |
 
@@ -328,6 +333,7 @@ dsh web --no-open --port 0                                   # 起引擎；终�
 
 | 状态 | 内容 |
 | --- | --- |
+| 已发布 `v0.2.0` | 快捷新增胶囊（行首空心 ⚡ 圆钮：带着草稿里那句话与当前工作区打开表单，新胶囊落在第一位）；分组展开层居中于分组胶囊、撑满这一排后换行、点别处或点组内胶囊自动收起 |
 | 已发布 `v0.1.0` | 文件存储与种子树；胶囊行（折叠 / 插入 / 快速发送 / 工作区限定 / 拖动排序）；抽屉（今日台账 / 趋势统计 / 设置）；四支颜色的主题与外观；胶囊树编辑器；⚡Super Pillls（两道脱敏、发送前预览、DeepSeek 识别、确认后入树） |
 | 计划中 | 胶囊导入导出；跨设备同步；更多识别模型的实测与适配 |
 

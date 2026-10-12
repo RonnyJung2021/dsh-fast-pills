@@ -163,6 +163,9 @@ export const GROUP_ATTRIBUTE = 'data-dsh-fast-pill-group'
 
 /** Markers for the round entry, the drawer it opens, and the panel both mounts share. */
 export const CIRCLE_ATTRIBUTE = 'data-dsh-fast-pill-circle'
+
+/** Marker for the row's quick-add entry: the round button, and the dialog it opens. */
+export const QUICK_ADD_ATTRIBUTE = 'data-dsh-fast-pill-quick-add'
 export const DRAWER_ATTRIBUTE = 'data-dsh-fast-pill-drawer'
 export const PANEL_ATTRIBUTE = 'data-dsh-fast-pill-panel'
 

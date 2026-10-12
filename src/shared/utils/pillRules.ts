@@ -1,9 +1,11 @@
 /**
- * What a press inserts, and which capsules the current directory may show.
+ * What a press inserts, which capsules the current directory may show, and which
+ * workspace a new capsule starts limited to.
  *
- * These are the row's two rules that hold no React: both are pure functions of
- * the stored tree, so the tests drive them without a page. The component turns
- * their answers into buttons.
+ * These are the row's rules that hold no React: every one is a pure function of
+ * the stored tree (or of the page's workspace list) and the session's directory,
+ * so the tests drive them without a page. The component turns their answers into
+ * buttons.
  */
 
 import type { Pill, PillNode, PillTree, PillGroup } from '../types/index.ts'
@@ -68,6 +70,30 @@ export function scopeMatches(scope: string, directory: string | undefined): bool
   if (/^[\\/]/u.test(entry)) return path === entry || path.startsWith(`${entry}/`) || path.startsWith(`${entry}\\`)
   const segments = path.split(/[\\/]+/u).filter(segment => segment.length > 0)
   return segments.includes(entry)
+}
+
+/**
+ * The scope a new capsule starts limited to: the workspace the session sits in.
+ *
+ * The deepest workspace covering the session's directory wins, so a session
+ * opened inside a project that is itself a workspace is limited to that project
+ * rather than to the directory holding it. A directory no workspace covers picks
+ * nothing, which is the same as everywhere.
+ * @param workspaces - the workspaces the page knows, each with its absolute path.
+ * @param directory - the session's directory, when the host has said.
+ * @returns the paths to limit it to, which is at most one.
+ */
+export function workspaceScope(
+  workspaces: readonly { readonly path: string }[],
+  directory: string | undefined,
+): string[] {
+  const deepest = workspaces
+    .filter(item => scopeMatches(item.path, directory))
+    .reduce<{ readonly path: string } | undefined>(
+      (best, item) => (best === undefined || item.path.length > best.path.length ? item : best),
+      undefined,
+    )
+  return deepest === undefined ? [] : [deepest.path]
 }
 
 /**

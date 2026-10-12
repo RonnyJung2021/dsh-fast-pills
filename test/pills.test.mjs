@@ -9,7 +9,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 
-import { pillInsertion, scopeMatches, visibleChildren, visibleTree, workspaceName } from '../src/shared/utils/pillRules.ts'
+import { pillInsertion, scopeMatches, visibleChildren, visibleTree, workspaceName, workspaceScope } from '../src/shared/utils/pillRules.ts'
 
 /** One capsule, with the fields the tests do not care about filled in. */
 function pill(fields = {}) {
@@ -63,6 +63,26 @@ describe('scopeMatches', () => {
     assert.equal(scopeMatches('/Users/me/app', '/Users/me/app-other'), false)
     assert.equal(scopeMatches('my-app', undefined), false)
     assert.equal(scopeMatches('', '/Users/me/app'), false)
+  })
+})
+
+describe('workspaceScope', () => {
+  const workspaces = [{ path: '/Users/me/app' }, { path: '/Users/me/app/portico' }, { path: '/Users/me/other' }]
+
+  it('limits a new capsule to the workspace the session sits in', () => {
+    assert.deepEqual(workspaceScope(workspaces, '/Users/me/app'), ['/Users/me/app'])
+    assert.deepEqual(workspaceScope(workspaces, '/Users/me/other/docs'), ['/Users/me/other'])
+  })
+
+  it('takes the deepest workspace when one holds another', () => {
+    assert.deepEqual(workspaceScope(workspaces, '/Users/me/app/portico'), ['/Users/me/app/portico'])
+    assert.deepEqual(workspaceScope(workspaces, '/Users/me/app/portico/docs'), ['/Users/me/app/portico'])
+  })
+
+  it('limits nothing when no workspace covers the directory', () => {
+    assert.deepEqual(workspaceScope(workspaces, '/Users/me/elsewhere'), [])
+    assert.deepEqual(workspaceScope(workspaces, undefined), [])
+    assert.deepEqual(workspaceScope([], '/Users/me/app'), [])
   })
 })
 

@@ -153,6 +153,61 @@ export const ROW_CSS = `
   [data-dsh-fast-pills="row"] .dfp-count-cell { animation: none; }
 }
 
+/* 快捷新增：一枚空心圆，和旁边的胶囊同高（26px）、上下对齐，实线圆边、
+   中间不填色，里面只放那枚闪电。边与字取**风格色彩**的深色那一支——与行首那颗
+   圆牌同一支颜色，于是它读成「这一排自己的一件」，而不是又一颗普通胶囊。 */
+[data-dsh-fast-pills="row"] .dfp-quick-add {
+  box-sizing: border-box;
+  position: relative;   /* 说明条以它为参照 */
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--dfp-style-ink);
+  border-radius: 999px;
+  corner-shape: round;
+  background: none;
+  color: var(--dfp-style-ink);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+/* 悬停的淡底由那一支边色自己调出来，而不是另取一支：风格色彩不选时它自带的
+   --dfp-style-wash 是全透明的，用它这一格就没有任何反馈；换色时这里也跟着换。 */
+[data-dsh-fast-pills="row"] .dfp-quick-add:hover {
+  background: color-mix(in srgb, var(--dfp-style-ink) 16%, transparent);
+}
+
+/* 悬浮说明：黑底白字的一小条，浮在圆钮上方。写在这里而不是交给浏览器自带的
+   title：那一条是系统色的，也不是这一排的语法，且由指针停留的时长决定何时出现。 */
+[data-dsh-fast-pills="row"] .dfp-quick-add-tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 6;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #000000;
+  color: #FFFFFF;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-dsh-fast-pills="row"] .dfp-quick-add:hover .dfp-quick-add-tip,
+[data-dsh-fast-pills="row"] .dfp-quick-add:focus-visible .dfp-quick-add-tip {
+  opacity: 1;
+}
+
 /* The row's capsule: the product's round capsule, unchanged. */
 [data-dsh-fast-pills="row"] .dfp-pill {
   box-sizing: border-box;
@@ -249,26 +304,30 @@ export const ROW_CSS = `
 /* 分组是这一排里唯一有「里面」的一件：它自己还是普通的一格，展开的那一层浮在它
    **上方**（绝对定位，脱开文档流），所以
    ——这一排里其他胶囊一颗都不会挪位，行高也不变，也就不会连带滚动；
-   ——分组按钮自己留在原地，鼠标不用追着它走就能再点一次收起来。 */
+   ——分组按钮自己留在原地，鼠标不用追着它走就能再点一次收起来。
+   这一格自己不定位：展开的那一层认的是**整排**那个参照（见下一条），宽度才量得出
+   「这一排有多宽」。 */
 [data-dsh-fast-pills="row"] .dfp-group-wrap {
   box-sizing: border-box;
-  position: relative;
   display: inline-flex;
   flex: none;
   align-items: center;
 }
 
-/* 展开的那一层：往上涨（贴着自己那格的下沿），但**从这一排的左边缘开始铺**——
-   不跟着分组按钮的位置走，所以它不会因为按钮排在后面而被右边缘切掉，也不会把这一排
-   撑宽。宽到内容为止，最多不超过这一排的宽度。 */
+/* 展开的那一层长在分组胶囊的**正上方**：这一格的中线对那一层的中线，往左右一起长，
+   长到这一排的宽度为止，再多就让组内胶囊换行。
+   两个数由 JS 量出来（见 useFoldPlacement）：--dfp-fold-center 是这一格的中线离这一排
+   左边缘多远；--dfp-fold-shift 是「正中会长到排外面去」时往回让的那一点——分组靠近边缘
+   时把它推回这一排的范围内，但不改变它想摆的位置。 */
 [data-dsh-fast-pills="row"] .dfp-group-body {
   box-sizing: border-box;
   position: absolute;
-  left: calc(-1 * var(--dfp-fold-inset, 0px));
+  left: var(--dfp-fold-center, 0px);
   bottom: 100%;
   z-index: 5;
   width: max-content;
-  max-width: min(100vw - 32px, var(--dfp-fold-max, 720px));
+  max-width: 100%;
+  transform: translateX(calc(-50% + var(--dfp-fold-shift, 0px)));
   margin: 0 0 6px;
   padding: 4px 6px 4px 10px;
   /* 它是一块浮在上面的纸，不是这一排里的一条：纸色底 + 极淡的投影把它从页面内容上托起来，
@@ -276,7 +335,7 @@ export const ROW_CSS = `
   background: var(--dfp-pill-fill);
   border-radius: 6px;
   box-shadow: 0 2px 10px var(--dfp-accent-wash), 0 0 0 1px var(--dfp-group-stroke);
-  transform-origin: bottom left;
+  transform-origin: bottom center;
   animation: dfp-fold-up 0.2s ease-out;
 }
 
@@ -289,9 +348,11 @@ export const ROW_CSS = `
   animation: dfp-fold-in 0.24s ease-out;
 }
 
+/* 往上长的那一下要把摆位那一截 translateX 一起写进来：关键帧里的 transform 会整条盖掉
+   元素自己的，只写 scaleY 的话动画一开始这一层就跳到排的左边缘去了。 */
 @keyframes dfp-fold-up {
-  from { transform: scaleY(0.6) translateY(6px); opacity: 0; }
-  to   { transform: scaleY(1) translateY(0); opacity: 1; }
+  from { transform: translateX(calc(-50% + var(--dfp-fold-shift, 0px))) scaleY(0.6) translateY(6px); opacity: 0; }
+  to   { transform: translateX(calc(-50% + var(--dfp-fold-shift, 0px))) scaleY(1) translateY(0); opacity: 1; }
 }
 
 @keyframes dfp-fold-in {
@@ -1061,6 +1122,20 @@ export const ROW_CSS = `
   color: var(--dfp-ink);
   box-shadow: var(--dsw-elevation-prominent);
   animation: dfp-fade-in 160ms var(--ds-ease-in-out);
+}
+
+/* 装表单的弹窗宽一档：里面是三行字段，不是一句话。 */
+.dfp-dialog:has(.dfp-form) {
+  width: min(560px, 100%);
+}
+
+/* 弹窗里的表单就是弹窗自己的正文：外圈那道边与留白留给弹窗，纸也只有一层，
+   否则弹窗里再套一个小盒子，两层纸边贴在一起。 */
+.dfp-dialog > .dfp-form {
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: none;
 }
 
 .dfp-dialog-head {
